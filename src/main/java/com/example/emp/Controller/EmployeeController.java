@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 //import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ import com.example.emp.DTO.EmployeeDto;
 import com.example.emp.Service.EmployeeService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
@@ -28,6 +29,7 @@ public class EmployeeController {
 	@PostMapping("/employees")
 	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto)
 	{
+		
 		EmployeeDto savedEmployee=employeeService.createEmployee(employeeDto);
 		return new ResponseEntity<EmployeeDto>(savedEmployee,HttpStatus.CREATED);
 	}
@@ -43,6 +45,7 @@ public class EmployeeController {
 	}
 	
 	// Build API to get  Get All Employees
+	
 	
 	@GetMapping("/getAllemployees")
 	public ResponseEntity<List<EmployeeDto>> getAllEmployees()

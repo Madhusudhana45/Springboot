@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.emp.DTO.EmployeeDto;
@@ -17,11 +18,15 @@ public class EmpServiceImplementation implements EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Override
 	public EmployeeDto createEmployee( EmployeeDto employeeDto) {
 		
+		employeeDto.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
+		
 		Employee employee =EmployeeMapper.EmployeeDtoToEmployee(employeeDto);
+		
 		Employee savedEmployee= employeeRepository.save(employee);
 		 return EmployeeMapper.EmployeeToEmployeeDto(savedEmployee);
 	}
@@ -50,7 +55,10 @@ public class EmpServiceImplementation implements EmployeeService {
 	employee.setFirstName(updateEmployee.getFirstName());
 	employee.setLastName(updateEmployee.getLastName());
 	employee.setEmail(updateEmployee.getEmail());
-	employee.setPassword(updateEmployee.getPassword());
+	 if (updateEmployee.getPassword() != null && !updateEmployee.getPassword().isEmpty()) {
+	        employee.setPassword(passwordEncoder.encode(updateEmployee.getPassword()));
+	    }
+	
 	Employee updateEmployeeObj= employeeRepository.save(employee);
 		
 	return EmployeeMapper.EmployeeToEmployeeDto(updateEmployeeObj);
